@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <!-- Logistic Surcharge Service -->
+        <service id="Act\OrderSurcharges\Service\LogisticSurchargeService">
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <tag name="kernel.event_subscriber"/>
+            <tag name="monolog.logger" channel="order_surcharges"/>
+        </service>
+
+        <!-- COD Fee Service -->
+        <service id="Act\OrderSurcharges\Service\CodFeeService">
+            <argument type="service" id="product.repository"/>
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <argument type="service" id="monolog.logger.order_surcharges" on-invalid="null"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Cart Cleanup Service -->
+        <service id="Act\OrderSurcharges\Service\CartCleanupService">
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <argument type="service" id="monolog.logger.order_surcharges" on-invalid="null"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Cart Removed Subscriber -->
+        <service id="Act\OrderSurcharges\Subscriber\CartRemovedSubscriber">
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Payment Method Changed Subscriber -->
+        <service id="Act\OrderSurcharges\Subscriber\PaymentMethodChangedSubscriber">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+
+        <!-- Cart Loaded Subscriber -->
+        <service id="Act\OrderSurcharges\Subscriber\CartLoadedSubscriber">
+            <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\SalesChannel\CartService"/>
+            <tag name="kernel.event_subscriber"/>
+        </service>
+    </services>
+</container>

@@ -1,0 +1,9 @@
+{% sw_extends '@Storefront/storefront/component/line-item/element/quantity.html.twig' %}
+
+{% block component_line_item_quantity %}
+    {% if (lineItem.payload.isLogisticSurcharge is defined and lineItem.payload.isLogisticSurcharge) or (lineItem.payload.isCodFee is defined and lineItem.payload.isCodFee) %}
+        {# Keine Anzeige der Menge für die Zuschläge #}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,9 @@
+{% sw_extends '@Storefront/storefront/component/delivery-information/delivery-information.html.twig' %}
+
+{% block component_delivery_information %}
+    {% if (lineItem is defined and lineItem.payload.isLogisticSurcharge is defined and lineItem.payload.isLogisticSurcharge) or (lineItem is defined and lineItem.payload.isCodFee is defined and lineItem.payload.isCodFee) %}
+        {# Keine Anzeige der Lieferzeit für die Zuschläge #}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

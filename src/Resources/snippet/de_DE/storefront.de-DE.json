@@ -1,0 +1,10 @@
+{
+    "actualize": {
+        "order": {
+            "surcharges": {
+                "cod-fee": "Nachnahmegebühr",
+                "logistic-surcharge": "Logistikpauschale"
+            }
+        }
+    }
+}

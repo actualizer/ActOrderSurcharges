@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+    <card>
+        <title lang="de-DE">Logistikpauschale Einstellungen</title>
+        <title lang="en-GB">Logistic Surcharge Settings</title>
+        <input-field type="bool">
+            <name>logisticSurchargeActive</name>
+            <label lang="de-DE">Aktiv</label>
+            <label lang="en-GB">Active</label>
+            <defaultValue>true</defaultValue>
+        </input-field>
+        <input-field type="float">
+            <name>logisticSurchargeAmount</name>
+            <label lang="de-DE">Betrag der Logistikpauschale</label>
+            <label lang="en-GB">Logistic surcharge amount</label>
+            <defaultValue>4.95</defaultValue>
+            <helpText lang="de-DE">Der Betrag, der als Logistikpauschale hinzugefügt werden soll</helpText>
+            <helpText lang="en-GB">The amount to be added as logistic surcharge</helpText>
+        </input-field>
+    </card>
+    <card>
+        <title lang="de-DE">Nachnahmegebühr Einstellungen</title>
+        <title lang="en-GB">Cash on Delivery Fee Settings</title>
+        <input-field type="bool">
+            <name>codFeeActive</name>
+            <label lang="de-DE">Aktiv</label>
+            <label lang="en-GB">Active</label>
+            <defaultValue>true</defaultValue>
+        </input-field>
+        <input-field type="float">
+            <name>codFeeAmount</name>
+            <label lang="de-DE">Betrag der Nachnahmegebühr</label>
+            <label lang="en-GB">Cash on delivery fee amount</label>
+            <defaultValue>5.95</defaultValue>
+            <helpText lang="de-DE">Der Betrag, der bei Wahl der Nachnahme-Zahlart hinzugefügt werden soll</helpText>
+            <helpText lang="en-GB">The amount to be added when cash on delivery payment method is selected</helpText>
+        </input-field>
+        <input-field type="text">
+            <name>codPaymentHandlerIdentifier</name>
+            <label lang="de-DE">Technischer Name der Nachnahme-Zahlart</label>
+            <label lang="en-GB">Technical name of cash on delivery payment method</label>
+            <defaultValue>payment_cashpayment</defaultValue>
+            <helpText lang="de-DE">Der technische Identifier der Nachnahme-Zahlart (z.B. "payment_cashpayment")</helpText>
+            <helpText lang="en-GB">The technical identifier of the cash on delivery payment method (e.g. "payment_cashpayment")</helpText>
+        </input-field>
+    </card>
+    <card>
+        <title lang="de-DE">Steuereinstellungen</title>
+        <title lang="en-GB">Tax Settings</title>
+        <input-field type="float">
+            <name>defaultTaxRate</name>
+            <label lang="de-DE">Standard-Steuersatz</label>
+            <label lang="en-GB">Default tax rate</label>
+            <defaultValue>19.0</defaultValue>
+            <helpText lang="de-DE">Der Steuersatz, der verwendet wird, wenn kein anderer Steuersatz ermittelt werden kann</helpText>
+            <helpText lang="en-GB">The tax rate to be used when no other tax rate can be determined</helpText>
+        </input-field>
+    </card>
+</config>

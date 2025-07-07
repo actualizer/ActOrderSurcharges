@@ -1,0 +1,34 @@
+{
+    "name": "act/order-surcharges",
+    "description": "Actualize: Order Surcharges - Adds surcharges like logistic fees and cash on delivery fees to the cart",
+    "type": "shopware-platform-plugin",
+    "version": "1.0.1",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Actualize",
+            "homepage": "https://www.actualize.de"
+        }
+    ],
+    "require": {
+        "shopware/core": ">=6.6.10 <6.8.0",
+        "php": ">=8.3"
+    },
+    "extra": {
+        "shopware-plugin-class": "Act\\OrderSurcharges\\ActOrderSurcharges",
+        "plugin-icon": "src/Resources/config/plugin.png",
+        "label": {
+            "de-DE": "Actualize: Bestellzuschläge",
+            "en-GB": "Actualize: Order Surcharges"
+        },
+        "description": {
+            "de-DE": "Fügt Zuschläge wie Logistikpauschale und Nachnahmegebühr zum Warenkorb hinzu",
+            "en-GB": "Adds surcharges like logistic fees and cash on delivery fees to the cart"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Act\\OrderSurcharges\\": "src/"
+        }
+    }
+}

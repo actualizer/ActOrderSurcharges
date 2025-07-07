@@ -1,0 +1,10 @@
+{
+    "actualize": {
+        "order": {
+            "surcharges": {
+                "cod-fee": "Cash on delivery fee",
+                "logistic-surcharge": "Logistic surcharge"
+            }
+        }
+    }
+}

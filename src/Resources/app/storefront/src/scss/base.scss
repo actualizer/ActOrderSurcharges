@@ -1,0 +1,28 @@
+.icon-shipping-box {
+    background: url('../../../public/storefront/img/shipping-box.svg');
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.icon-cash-on-delivery {
+    background: url('../../../public/storefront/img/cash-on-delivery.svg');
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.cart-item-logistic-surcharge,
+.cart-item-cod-fee {
+    .line-item-remove-button {
+        display: none;
+    }
+
+    background-color: rgba(0, 0, 0, 0.03);
+}

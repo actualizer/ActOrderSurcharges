@@ -1,0 +1,9 @@
+{% sw_extends '@Storefront/storefront/component/line-item/element/delivery-date.html.twig' %}
+
+{% block component_line_item_delivery_date %}
+	{% if lineItem.id == 'cod-fee' or lineItem.id == 'logistic-surcharge' %}
+		{# Keine Anzeige der Lieferzeit für die Nachnahmegebühr und Logistikpauschale #}
+	{% else %}
+		{{ parent() }}
+	{% endif %}
+{% endblock %}

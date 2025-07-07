@@ -1,0 +1,21 @@
+{% sw_extends '@Storefront/storefront/component/line-item/element/image.html.twig' %}
+
+{% block component_line_item_image %}
+    {% if lineItem.payload.isLogisticSurcharge is defined and lineItem.payload.isLogisticSurcharge %}
+        <div class="line-item-img line-item-icon" aria-hidden="true">
+            <img src="{{ asset('bundles/actordersurcharges/storefront/img/shipping-box.svg') }}"
+                 alt="Logistikpauschale"
+                 class="img-fluid line-item-img-source"
+                 style="width: 50px; height: 50px;">
+        </div>
+    {% elseif lineItem.payload.isCodFee is defined and lineItem.payload.isCodFee %}
+        <div class="line-item-img line-item-icon" aria-hidden="true">
+            <img src="{{ asset('bundles/actordersurcharges/storefront/img/cash-on-delivery.svg') }}"
+                 alt="Nachnahmegebühr"
+                 class="img-fluid line-item-img-source"
+                 style="width: 50px; height: 50px;">
+        </div>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
