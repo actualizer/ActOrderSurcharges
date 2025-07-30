@@ -21,6 +21,7 @@ class LogisticSurchargeLineItem extends LineItem
         // Add custom fields
         $this->setPayloadValue('customFields', [
             'icon' => 'icon-shipping-box',
+            'iconLabel' => 'actualize.order.surcharges.logistic-surcharge-icon-label',
             'isLogisticSurcharge' => true
         ]);
         

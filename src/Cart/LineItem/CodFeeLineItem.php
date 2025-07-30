@@ -21,6 +21,7 @@ class CodFeeLineItem extends LineItem
         // Add custom fields
         $this->setPayloadValue('customFields', [
             'icon' => 'icon-money',
+            'iconLabel' => 'actualize.order.surcharges.cod-fee-icon-label',
             'isCodFee' => true
         ]);
         

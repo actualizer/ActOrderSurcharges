@@ -3,7 +3,9 @@
         "order": {
             "surcharges": {
                 "cod-fee": "Cash on delivery fee",
-                "logistic-surcharge": "Logistic surcharge"
+                "logistic-surcharge": "Logistic surcharge",
+                "cod-fee-icon-label": "Round icon with plus symbol for cash on delivery fee",
+                "logistic-surcharge-icon-label": "Shipping box icon for logistic surcharge"
             }
         }
     }
