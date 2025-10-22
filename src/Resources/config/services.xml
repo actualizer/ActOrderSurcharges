@@ -8,6 +8,7 @@
         <service id="Act\OrderSurcharges\Cart\LogisticSurchargeProcessor">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
+            <argument type="service" id="language.repository"/>
             <tag name="shopware.cart.processor" priority="-5000"/>
         </service>
 
@@ -15,6 +16,7 @@
         <service id="Act\OrderSurcharges\Cart\CodFeeProcessor">
             <argument type="service" id="Shopware\Core\System\SystemConfig\SystemConfigService"/>
             <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
+            <argument type="service" id="language.repository"/>
             <tag name="shopware.cart.processor" priority="-5100"/>
         </service>
 

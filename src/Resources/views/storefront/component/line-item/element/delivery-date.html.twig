@@ -2,7 +2,7 @@
 
 {% block component_line_item_delivery_date %}
 	{% if lineItem.id == 'cod-fee' or lineItem.id == 'logistic-surcharge' %}
-		{# Keine Anzeige der Lieferzeit für die Nachnahmegebühr und Logistikpauschale #}
+		{# Do not display delivery date for cash on delivery fee and logistic surcharge #}
 	{% else %}
 		{{ parent() }}
 	{% endif %}

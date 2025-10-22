@@ -2,7 +2,7 @@
 
 {% block component_delivery_information %}
     {% if (lineItem is defined and lineItem.payload.isLogisticSurcharge is defined and lineItem.payload.isLogisticSurcharge) or (lineItem is defined and lineItem.payload.isCodFee is defined and lineItem.payload.isCodFee) %}
-        {# Keine Anzeige der Lieferzeit für die Zuschläge #}
+        {# Do not display delivery information for surcharges #}
     {% else %}
         {{ parent() }}
     {% endif %}

@@ -8,11 +8,12 @@ use Shopware\Core\Checkout\Cart\CartBehavior;
 use Shopware\Core\Checkout\Cart\CartProcessorInterface;
 use Shopware\Core\Checkout\Cart\LineItem\CartDataCollection;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
-use Shopware\Core\Checkout\Cart\LineItem\LineItemCollection;
 use Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\Struct\QuantityPriceDefinition;
 use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRule;
 use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRuleCollection;
+use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
+use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 
@@ -20,13 +21,16 @@ class CodFeeProcessor implements CartProcessorInterface
 {
     private SystemConfigService $systemConfigService;
     private QuantityPriceCalculator $calculator;
+    private EntityRepository $languageRepository;
 
     public function __construct(
         SystemConfigService $systemConfigService,
-        QuantityPriceCalculator $calculator
+        QuantityPriceCalculator $calculator,
+        EntityRepository $languageRepository
     ) {
         $this->systemConfigService = $systemConfigService;
         $this->calculator = $calculator;
+        $this->languageRepository = $languageRepository;
     }
 
     public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
@@ -98,7 +102,7 @@ class CodFeeProcessor implements CartProcessorInterface
 
         // Check if COD fee already exists
         $lineItem = $cart->getLineItems()->get(CodFeeLineItem::TYPE);
-        
+
         if (!$lineItem) {
             $lineItem = new CodFeeLineItem(
                 CodFeeLineItem::TYPE,
@@ -107,16 +111,33 @@ class CodFeeProcessor implements CartProcessorInterface
             $cart->getLineItems()->add($lineItem);
         }
 
+        // Get the locale from the context language
+        $languageId = $context->getContext()->getLanguageId();
+
+        // Load language with locale association
+        $criteria = new Criteria([$languageId]);
+        $criteria->addAssociation('locale');
+        $language = $this->languageRepository->search($criteria, $context->getContext())->first();
+
+        $locale = $language?->getLocale()?->getCode() ?? 'de-DE';
+
+        // Determine label based on locale
+        $translatedLabel = ($locale === 'en-GB' || str_starts_with($locale, 'en'))
+            ? 'Cash on delivery fee'
+            : 'Nachnahmegebühr';
+
+        $lineItem->setLabel($translatedLabel);
+
         // Get tax rate
         $taxRate = $this->getTaxRate($cart, $context);
-        
+
         // Create price definition
         $definition = new QuantityPriceDefinition(
             $feeAmount,
             new TaxRuleCollection([new TaxRule($taxRate)]),
             1
         );
-        
+
         // Calculate price
         $price = $this->calculator->calculate($definition, $context);
         $lineItem->setPrice($price);
