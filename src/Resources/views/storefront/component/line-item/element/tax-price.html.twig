@@ -1,0 +1,9 @@
+{% sw_extends '@Storefront/storefront/component/line-item/element/tax-price.html.twig' %}
+
+{% block component_line_item_tax_price %}
+    {% if (lineItem.payload.isLogisticSurcharge is defined and lineItem.payload.isLogisticSurcharge) or (lineItem.payload.isCodFee is defined and lineItem.payload.isCodFee) %}
+        {# Do not display tax price for surcharges #}
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
