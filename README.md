@@ -2,13 +2,6 @@
 
 A Shopware 6 plugin that automatically adds configurable surcharges to the shopping cart, including logistic fees and cash on delivery charges with dynamic payment method detection.
 
-## Version Compatibility
-
-| Plugin Version | Shopware Version | Branch | Download |
-|----------------|------------------|---------|-----------|
-| 1.1.x | 6.7.1+ | main | [Latest Release](../../releases/latest) |
-| 1.0.x | 6.6.10 - 6.7.0 | [v1.0-maintenance](../../tree/v1.0-maintenance) | [v1.0.1](../../releases/tag/v1.0.1) |
-
 ## Features
 
 - ✅ Automatic logistic surcharge for all orders
@@ -75,18 +68,11 @@ A Shopware 6 plugin that automatically adds configurable surcharges to the shopp
 
 ## Technical Details
 
-### Events Used
-- `CartChangedEvent` - Monitors cart changes for surcharge management
-- `CartLoadedEvent` - Ensures surcharges are present when cart is loaded
-- `CheckoutConfirmPageLoadedEvent` - Updates surcharges on checkout page
-- `CustomerChangedPaymentMethodEvent` - Handles payment method changes
-- `KernelEvents::CONTROLLER` - Detects payment configuration changes
-
-### Surcharge Management
+### Architecture
+- Uses `CartProcessorInterface` for clean cart integration
+- `SalesChannelContextSwitchEvent` for payment method change detection
 - Line items with unique IDs (`logistic-surcharge`, `cod-fee`)
 - Proper price definitions with tax calculations
-- Cart cleanup service to prevent orphaned surcharges
-- Session-aware cart handling
 
 ### Payment Method Detection
 Detects COD payments by checking payment method names for:
@@ -115,14 +101,13 @@ ActOrderSurcharges/
 │   │   └── public/
 │   │       └── storefront/
 │   │           └── img/
-│   ├── Service/
-│   │   ├── CartCleanupService.php
-│   │   ├── CodFeeService.php
-│   │   └── LogisticSurchargeService.php
+│   ├── Cart/
+│   │   ├── LogisticSurchargeProcessor.php
+│   │   ├── CodFeeProcessor.php
+│   │   └── LineItem/
+│   │       ├── LogisticSurchargeLineItem.php
+│   │       └── CodFeeLineItem.php
 │   └── Subscriber/
-│       ├── CartLoadedSubscriber.php
-│       ├── CartPaymentMethodSubscriber.php
-│       ├── CartRemovedSubscriber.php
 │       └── PaymentMethodChangedSubscriber.php
 ```
 

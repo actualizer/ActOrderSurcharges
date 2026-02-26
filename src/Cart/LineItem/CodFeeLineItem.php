@@ -8,12 +8,11 @@ use Shopware\Core\Framework\Struct\ArrayStruct;
 class CodFeeLineItem extends LineItem
 {
     public const TYPE = 'cod-fee';
+    public const SNIPPET_KEY = 'actualize.order.surcharges.cod-fee';
 
     public function __construct(string $id, int $quantity = 1)
     {
         parent::__construct($id, self::TYPE, null, $quantity);
-
-        $this->setLabel('actualize.order.surcharges.cod-fee');
         $this->setGood(false);
         $this->setStackable(false);
         $this->setRemovable(false);

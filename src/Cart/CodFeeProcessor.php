@@ -12,25 +12,24 @@ use Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\Struct\QuantityPriceDefinition;
 use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRule;
 use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRuleCollection;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
-use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CodFeeProcessor implements CartProcessorInterface
 {
     private SystemConfigService $systemConfigService;
     private QuantityPriceCalculator $calculator;
-    private EntityRepository $languageRepository;
+    private TranslatorInterface $translator;
 
     public function __construct(
         SystemConfigService $systemConfigService,
         QuantityPriceCalculator $calculator,
-        EntityRepository $languageRepository
+        TranslatorInterface $translator
     ) {
         $this->systemConfigService = $systemConfigService;
         $this->calculator = $calculator;
-        $this->languageRepository = $languageRepository;
+        $this->translator = $translator;
     }
 
     public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
@@ -111,22 +110,7 @@ class CodFeeProcessor implements CartProcessorInterface
             $cart->getLineItems()->add($lineItem);
         }
 
-        // Get the locale from the context language
-        $languageId = $context->getContext()->getLanguageId();
-
-        // Load language with locale association
-        $criteria = new Criteria([$languageId]);
-        $criteria->addAssociation('locale');
-        $language = $this->languageRepository->search($criteria, $context->getContext())->first();
-
-        $locale = $language?->getLocale()?->getCode() ?? 'de-DE';
-
-        // Determine label based on locale
-        $translatedLabel = ($locale === 'en-GB' || str_starts_with($locale, 'en'))
-            ? 'Cash on delivery fee'
-            : 'Nachnahmegebühr';
-
-        $lineItem->setLabel($translatedLabel);
+        $lineItem->setLabel($this->translator->trans(CodFeeLineItem::SNIPPET_KEY));
 
         // Get tax rate
         $taxRate = $this->getTaxRate($cart, $context);
