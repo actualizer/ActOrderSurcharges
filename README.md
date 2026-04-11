@@ -4,14 +4,14 @@ A Shopware 6 plugin that automatically adds configurable surcharges to the shopp
 
 ## Features
 
-- ✅ Automatic logistic surcharge for all orders
-- ✅ Cash on delivery (COD) fee based on payment method selection
-- ✅ Dynamic surcharge calculation with proper tax handling
-- ✅ Automatic cart cleanup when items are removed
-- ✅ Payment method change detection and fee adjustment
-- ✅ Configurable surcharge amounts through admin panel
-- ✅ Multi-language support (German & English)
-- ✅ Compatible with Shopware 6.6.10 - 6.7.x
+- Automatic logistic surcharge for all orders
+- Cash on delivery (COD) fee based on payment method selection
+- Dynamic surcharge calculation with proper tax handling
+- Automatic cart cleanup when items are removed
+- Payment method change detection and fee adjustment
+- Configurable surcharge amounts through admin panel
+- Multi-language support (German & English)
+- Compatible with Shopware 6.6.10 - 6.7.x
 
 ## Requirements
 
@@ -79,37 +79,6 @@ Detects COD payments by checking payment method names for:
 - `nachnahme` (German)
 - `cash on delivery` (English)
 - `cod` (abbreviation)
-
-## File Structure
-
-```
-ActOrderSurcharges/
-├── composer.json
-├── README.md
-├── LICENSE
-├── src/
-│   ├── ActOrderSurcharges.php
-│   ├── Resources/
-│   │   ├── config/
-│   │   │   ├── config.xml
-│   │   │   └── services.xml
-│   │   ├── snippet/
-│   │   │   ├── de_DE/
-│   │   │   │   └── storefront.de-DE.json
-│   │   │   └── en_GB/
-│   │   │       └── storefront.en-GB.json
-│   │   └── public/
-│   │       └── storefront/
-│   │           └── img/
-│   ├── Cart/
-│   │   ├── LogisticSurchargeProcessor.php
-│   │   ├── CodFeeProcessor.php
-│   │   └── LineItem/
-│   │       ├── LogisticSurchargeLineItem.php
-│   │       └── CodFeeLineItem.php
-│   └── Subscriber/
-│       └── PaymentMethodChangedSubscriber.php
-```
 
 ## Development
 
