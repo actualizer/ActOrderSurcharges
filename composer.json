@@ -1,8 +1,8 @@
 {
-    "name": "act/order-surcharges",
+    "name": "actualizer/order-surcharges",
     "description": "Actualize: Order Surcharges - Adds surcharges like logistic fees and cash on delivery fees to the cart",
     "type": "shopware-platform-plugin",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "license": "MIT",
     "authors": [
         {
