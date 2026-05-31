@@ -8,6 +8,7 @@ use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
 use Shopware\Core\Checkout\Cart\Event\CartChangedEvent;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
+use Shopware\Core\Content\Product\ProductCollection;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
@@ -25,8 +26,9 @@ class LogisticSurchargeService implements EventSubscriberInterface
     private const LOGISTIC_SURCHARGE_ID = 'logistic-surcharge';
 
     /**
-     * @var EntityRepository
+     * @var EntityRepository<ProductCollection>
      */
+    // @phpstan-ignore property.onlyWritten (injected for parity with the sibling surcharge services; not read in this class, candidate for cleanup)
     private $productRepository;
 
     /**
@@ -39,6 +41,9 @@ class LogisticSurchargeService implements EventSubscriberInterface
      */
     private $cartService;
 
+    /**
+     * @param EntityRepository<ProductCollection> $productRepository
+     */
     public function __construct(
         EntityRepository $productRepository,
         SystemConfigService $systemConfigService,
@@ -50,7 +55,7 @@ class LogisticSurchargeService implements EventSubscriberInterface
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public static function getSubscribedEvents(): array
     {
@@ -213,8 +218,9 @@ class LogisticSurchargeService implements EventSubscriberInterface
         try {
             // Get the tax collection from the context
             $taxes = $context->getTaxRules();
-            if ($taxes->count() > 0) {
-                $taxRate = $taxes->first()->getTaxRate();
+            $firstTax = $taxes->first();
+            if ($firstTax !== null) {
+                $taxRate = $firstTax->getTaxRate();
             }
         } catch (\Exception $e) {
             // Tax rate could not be determined from context
@@ -225,8 +231,8 @@ class LogisticSurchargeService implements EventSubscriberInterface
             foreach ($cart->getLineItems() as $item) {
                 if ($item->getType() === LineItem::PRODUCT_LINE_ITEM_TYPE && $item->getPrice() !== null) {
                     $taxRules = $item->getPrice()->getTaxRules();
-                    if ($taxRules->count() > 0) {
-                        $taxRule = $taxRules->first();
+                    $taxRule = $taxRules->first();
+                    if ($taxRule !== null) {
                         $taxRate = $taxRule->getTaxRate();
                         break;
                     }
@@ -236,11 +242,10 @@ class LogisticSurchargeService implements EventSubscriberInterface
 
         // Final fallback to configured default tax rate
         if ($taxRate === null) {
-            $taxRate = (float) $this->systemConfigService->get(
+            $taxRate = (float) ($this->systemConfigService->get(
                 'ActOrderSurcharges.config.defaultTaxRate',
-                $context->getSalesChannelId(),
-                19.0
-            );
+                $context->getSalesChannelId()
+            ) ?? 19.0);
         }
 
         // Add the tax rule to the collection

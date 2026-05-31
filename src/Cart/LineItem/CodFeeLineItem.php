@@ -5,6 +5,7 @@ namespace Act\OrderSurcharges\Cart\LineItem;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Framework\Struct\ArrayStruct;
 
+// @phpstan-ignore class.extendsFinalByPhpDoc (LineItem is @final-by-phpdoc; this subclass predates that marker and is instantiated by the cart processor — kept to preserve behaviour, candidate for a factory refactor)
 class CodFeeLineItem extends LineItem
 {
     public const TYPE = 'cod-fee';

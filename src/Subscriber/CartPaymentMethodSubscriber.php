@@ -2,12 +2,14 @@
 
 namespace Act\OrderSurcharges\Subscriber;
 
+use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\Price\Struct\QuantityPriceDefinition;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
 use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRule;
 use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRuleCollection;
 use Shopware\Core\Checkout\Payment\PaymentMethodEntity;
+use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\SystemConfig\SystemConfigService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Shopware\Storefront\Page\Checkout\Cart\CheckoutCartPageLoadedEvent;
@@ -35,7 +37,7 @@ class CartPaymentMethodSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public static function getSubscribedEvents(): array
     {
@@ -82,7 +84,7 @@ class CartPaymentMethodSubscriber implements EventSubscriberInterface
         }
 
         // Name contains "Nachnahme" or "cash"
-        $paymentName = strtolower($paymentMethod->getName());
+        $paymentName = strtolower($paymentMethod->getName() ?? '');
         if (strpos($paymentName, 'nachnahme') !== false ||
             strpos($paymentName, 'cash') !== false) {
             $isCashOnDelivery = true;
@@ -99,7 +101,7 @@ class CartPaymentMethodSubscriber implements EventSubscriberInterface
     /**
      * Remove COD fee from cart
      */
-    private function removeCodFee($cart, $context): void
+    private function removeCodFee(Cart $cart, SalesChannelContext $context): void
     {
         if ($cart->has(self::COD_FEE_ID)) {
             $cart->remove(self::COD_FEE_ID);
@@ -110,7 +112,7 @@ class CartPaymentMethodSubscriber implements EventSubscriberInterface
     /**
      * Add COD fee if it doesn't already exist
      */
-    private function addCodFeeIfNotExists($cart, $context): void
+    private function addCodFeeIfNotExists(Cart $cart, SalesChannelContext $context): void
     {
         if ($cart->has(self::COD_FEE_ID)) {
             return;

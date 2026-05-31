@@ -64,7 +64,7 @@ class CodFeeProcessor implements CartProcessorInterface
     private function isCodPayment(SalesChannelContext $context): bool
     {
         $paymentMethod = $context->getPaymentMethod();
-        $paymentName = strtolower($paymentMethod->getName());
+        $paymentName = strtolower($paymentMethod->getName() ?? '');
 
         return strpos($paymentName, 'nachnahme') !== false ||
                strpos($paymentName, 'cash on delivery') !== false ||
@@ -89,10 +89,10 @@ class CodFeeProcessor implements CartProcessorInterface
     private function addCodFee(Cart $cart, SalesChannelContext $context): void
     {
         // Get fee amount from config
-        $feeAmount = (float) $this->systemConfigService->get(
+        $feeAmount = (float) ($this->systemConfigService->get(
             'ActOrderSurcharges.config.codFeeAmount',
             $context->getSalesChannelId()
-        ) ?? 0.0;
+        ) ?? 0.0);
 
         if ($feeAmount <= 0) {
             $this->removeCodFee($cart);
@@ -133,16 +133,17 @@ class CodFeeProcessor implements CartProcessorInterface
         foreach ($cart->getLineItems() as $item) {
             if ($item->getType() === LineItem::PRODUCT_LINE_ITEM_TYPE && $item->getPrice() !== null) {
                 $taxRules = $item->getPrice()->getTaxRules();
-                if ($taxRules->count() > 0) {
-                    return $taxRules->first()->getTaxRate();
+                $firstTaxRule = $taxRules->first();
+                if ($firstTaxRule !== null) {
+                    return $firstTaxRule->getTaxRate();
                 }
             }
         }
 
         // Fallback to default tax rate
-        return (float) $this->systemConfigService->get(
+        return (float) ($this->systemConfigService->get(
             'ActOrderSurcharges.config.defaultTaxRate',
             $context->getSalesChannelId()
-        ) ?? 19.0;
+        ) ?? 19.0);
     }
 }

@@ -7,6 +7,7 @@ use Shopware\Core\Checkout\Cart\Event\CartChangedEvent;
 use Shopware\Core\Checkout\Cart\Event\CheckoutOrderPlacedEvent;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\SalesChannel\CartService;
+use Shopware\Core\Content\Product\ProductCollection;
 use Shopware\Core\Content\Product\ProductEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepository;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -25,8 +26,9 @@ class CodFeeService implements EventSubscriberInterface
     private const COD_FEE_ID = 'cod-fee';
 
     /**
-     * @var EntityRepository
+     * @var EntityRepository<ProductCollection>
      */
+    // @phpstan-ignore property.onlyWritten (injected for parity with the sibling surcharge services; not read in this class, candidate for cleanup)
     private $productRepository;
 
     /**
@@ -39,6 +41,9 @@ class CodFeeService implements EventSubscriberInterface
      */
     private $cartService;
 
+    /**
+     * @param EntityRepository<ProductCollection> $productRepository
+     */
     public function __construct(
         EntityRepository $productRepository,
         SystemConfigService $systemConfigService,
@@ -50,13 +55,14 @@ class CodFeeService implements EventSubscriberInterface
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public static function getSubscribedEvents(): array
     {
         return [
             CartChangedEvent::class => 'onCartChanged',
             CheckoutConfirmPageLoadedEvent::class => 'onCheckoutConfirmPageLoaded',
+            // @phpstan-ignore class.notFound (CustomerChangedPaymentMethodEvent removed in SW >=6.7 and absent on the 6.6.10 floor; dead-but-harmless listener — the event never fires, COD logic is covered by the other listeners; candidate for removal)
             CustomerChangedPaymentMethodEvent::class => 'onCustomerChangedPaymentMethod',
             CheckoutOrderPlacedEvent::class => 'onCheckoutOrderPlaced'
         ];
@@ -101,8 +107,10 @@ class CodFeeService implements EventSubscriberInterface
     /**
      * Handle payment method changed event
      */
+    // @phpstan-ignore class.notFound (param type removed in SW >=6.7 / absent on 6.6.10; dead listener, see getSubscribedEvents note)
     public function onCustomerChangedPaymentMethod(CustomerChangedPaymentMethodEvent $event): void
     {
+        // @phpstan-ignore class.notFound (event type does not exist on supported cores; method is never invoked)
         $salesChannelContext = $event->getSalesChannelContext();
         $cart = $this->cartService->getCart($salesChannelContext->getToken(), $salesChannelContext);
 
@@ -142,7 +150,7 @@ class CodFeeService implements EventSubscriberInterface
 
         // Get payment method
         $paymentMethod = $context->getPaymentMethod();
-        $paymentName = strtolower($paymentMethod->getName());
+        $paymentName = strtolower($paymentMethod->getName() ?? '');
 
         // Check if payment method is cash on delivery
         $isCod = strpos($paymentName, 'nachnahme') !== false ||
@@ -251,8 +259,9 @@ class CodFeeService implements EventSubscriberInterface
         try {
             // Get the tax collection from the context
             $taxes = $context->getTaxRules();
-            if ($taxes->count() > 0) {
-                $taxRate = $taxes->first()->getTaxRate();
+            $firstTax = $taxes->first();
+            if ($firstTax !== null) {
+                $taxRate = $firstTax->getTaxRate();
             }
         } catch (\Exception $e) {
             // Tax rate could not be determined from context
@@ -263,8 +272,8 @@ class CodFeeService implements EventSubscriberInterface
             foreach ($cart->getLineItems() as $item) {
                 if ($item->getType() === LineItem::PRODUCT_LINE_ITEM_TYPE && $item->getPrice() !== null) {
                     $taxRules = $item->getPrice()->getTaxRules();
-                    if ($taxRules->count() > 0) {
-                        $taxRule = $taxRules->first();
+                    $taxRule = $taxRules->first();
+                    if ($taxRule !== null) {
                         $taxRate = $taxRule->getTaxRate();
                         break;
                     }
@@ -274,11 +283,10 @@ class CodFeeService implements EventSubscriberInterface
 
         // Final fallback to configured default tax rate
         if ($taxRate === null) {
-            $taxRate = (float) $this->systemConfigService->get(
+            $taxRate = (float) ($this->systemConfigService->get(
                 'ActOrderSurcharges.config.defaultTaxRate',
-                $context->getSalesChannelId(),
-                19.0
-            );
+                $context->getSalesChannelId()
+            ) ?? 19.0);
         }
 
         // Add the tax rule to the collection

@@ -2,12 +2,14 @@
     "name": "actualizer/order-surcharges",
     "description": "Actualize: Order Surcharges - Adds surcharges like logistic fees and cash on delivery fees to the cart",
     "type": "shopware-platform-plugin",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "license": "MIT",
     "authors": [
         {
             "name": "Actualize",
-            "homepage": "https://www.actualize.de"
+            "email": "plugin@actualize.de",
+            "homepage": "https://actualize.de",
+            "role": "Developer"
         }
     ],
     "require": {
@@ -22,9 +24,21 @@
             "en-GB": "Actualize: Order Surcharges"
         },
         "description": {
-            "de-DE": "Fügt Zuschläge wie Logistikpauschale und Nachnahmegebühr zum Warenkorb hinzu",
-            "en-GB": "Adds surcharges like logistic fees and cash on delivery fees to the cart"
+            "de-DE": "Fügt dem Warenkorb automatisch konfigurierbare Zuschläge hinzu: eine Logistikpauschale pro Bestellung sowie eine Nachnahmegebühr bei Zahlart Nachnahme, jeweils mit eigenem Steuersatz.",
+            "en-GB": "Automatically adds configurable surcharges to the cart: a logistic flat fee per order and a cash-on-delivery fee for the matching payment method, each with its own tax rate."
+        },
+        "manufacturerLink": {
+            "de-DE": "https://actualize.de",
+            "en-GB": "https://actualize.de"
+        },
+        "supportLink": {
+            "de-DE": "https://github.com/actualizer/ActOrderSurcharges/issues",
+            "en-GB": "https://github.com/actualizer/ActOrderSurcharges/issues"
         }
+    },
+    "scripts": {
+        "format": "docker run --rm -v $(pwd):/ext shopware/shopware-cli:latest extension format /ext",
+        "check": "docker run --rm -v $(pwd):/ext shopware/shopware-cli:latest extension validate --full /ext"
     },
     "autoload": {
         "psr-4": {

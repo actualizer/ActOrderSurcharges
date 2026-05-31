@@ -73,10 +73,10 @@ class LogisticSurchargeProcessor implements CartProcessorInterface
     private function addLogisticSurcharge(Cart $cart, SalesChannelContext $context): void
     {
         // Get surcharge amount from config
-        $surchargeAmount = (float) $this->systemConfigService->get(
+        $surchargeAmount = (float) ($this->systemConfigService->get(
             'ActOrderSurcharges.config.logisticSurchargeAmount',
             $context->getSalesChannelId()
-        ) ?? 0.0;
+        ) ?? 0.0);
 
         if ($surchargeAmount <= 0) {
             $this->removeLogisticSurcharge($cart);
@@ -117,16 +117,17 @@ class LogisticSurchargeProcessor implements CartProcessorInterface
         foreach ($cart->getLineItems() as $item) {
             if ($item->getType() === LineItem::PRODUCT_LINE_ITEM_TYPE && $item->getPrice() !== null) {
                 $taxRules = $item->getPrice()->getTaxRules();
-                if ($taxRules->count() > 0) {
-                    return $taxRules->first()->getTaxRate();
+                $firstTaxRule = $taxRules->first();
+                if ($firstTaxRule !== null) {
+                    return $firstTaxRule->getTaxRate();
                 }
             }
         }
 
         // Fallback to default tax rate
-        return (float) $this->systemConfigService->get(
+        return (float) ($this->systemConfigService->get(
             'ActOrderSurcharges.config.defaultTaxRate',
             $context->getSalesChannelId()
-        ) ?? 19.0;
+        ) ?? 19.0);
     }
 }

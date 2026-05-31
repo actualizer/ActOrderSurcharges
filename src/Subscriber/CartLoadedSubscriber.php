@@ -39,7 +39,7 @@ class CartLoadedSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public static function getSubscribedEvents(): array
     {
@@ -70,7 +70,7 @@ class CartLoadedSubscriber implements EventSubscriberInterface
 
         // Check payment method
         $paymentMethod = $context->getPaymentMethod();
-        $paymentName = strtolower($paymentMethod->getName());
+        $paymentName = strtolower($paymentMethod->getName() ?? '');
 
         $isCod = strpos($paymentName, 'nachnahme') !== false ||
                  strpos($paymentName, 'cash on delivery') !== false ||
@@ -108,7 +108,7 @@ class CartLoadedSubscriber implements EventSubscriberInterface
     /**
      * Remove COD fee if present in the cart
      */
-    private function removeCodFeeIfPresent($cart, SalesChannelContext $context): void
+    private function removeCodFeeIfPresent(Cart $cart, SalesChannelContext $context): void
     {
         if ($cart->has(self::COD_FEE_ID)) {
             $cart->remove(self::COD_FEE_ID);
@@ -120,7 +120,7 @@ class CartLoadedSubscriber implements EventSubscriberInterface
     /**
      * Add COD fee to cart
      */
-    private function addCodFee($cart, SalesChannelContext $context): void
+    private function addCodFee(Cart $cart, SalesChannelContext $context): void
     {
         // Get fee amount from config
         $feeAmount = (float) $this->systemConfigService->get(
@@ -184,8 +184,9 @@ class CartLoadedSubscriber implements EventSubscriberInterface
         try {
             // Get the tax collection from the context
             $taxes = $context->getTaxRules();
-            if ($taxes->count() > 0) {
-                $taxRate = $taxes->first()->getTaxRate();
+            $firstTax = $taxes->first();
+            if ($firstTax !== null) {
+                $taxRate = $firstTax->getTaxRate();
             }
         } catch (\Exception $e) {
             // Tax rate could not be determined from context
@@ -196,8 +197,8 @@ class CartLoadedSubscriber implements EventSubscriberInterface
             foreach ($cart->getLineItems() as $item) {
                 if ($item->getType() === LineItem::PRODUCT_LINE_ITEM_TYPE && $item->getPrice() !== null) {
                     $taxRules = $item->getPrice()->getTaxRules();
-                    if ($taxRules->count() > 0) {
-                        $taxRule = $taxRules->first();
+                    $taxRule = $taxRules->first();
+                    if ($taxRule !== null) {
                         $taxRate = $taxRule->getTaxRate();
                         break;
                     }
@@ -207,11 +208,10 @@ class CartLoadedSubscriber implements EventSubscriberInterface
 
         // Final fallback to configured default tax rate
         if ($taxRate === null) {
-            $taxRate = (float) $this->systemConfigService->get(
+            $taxRate = (float) ($this->systemConfigService->get(
                 'ActOrderSurcharges.config.defaultTaxRate',
-                $context->getSalesChannelId(),
-                19.0
-            );
+                $context->getSalesChannelId()
+            ) ?? 19.0);
         }
 
         // Add tax rule to collection
