@@ -4,6 +4,7 @@ namespace Act\OrderSurcharges\Cart;
 
 use Act\OrderSurcharges\Cart\LineItem\CodFeeLineItem;
 use Shopware\Core\Checkout\Cart\Cart;
+use Shopware\Core\Checkout\CheckoutPermissions;
 use Shopware\Core\Checkout\Cart\CartBehavior;
 use Shopware\Core\Checkout\Cart\CartProcessorInterface;
 use Shopware\Core\Checkout\Cart\LineItem\CartDataCollection;
@@ -34,11 +35,21 @@ class CodFeeProcessor implements CartProcessorInterface
 
     public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
     {
+        // During an admin order edit the order is recalculated through this same
+        // processor. Preserve the COD fee exactly as it was persisted with the order
+        // instead of recomputing it from the current config, which would retroactively
+        // add, change or drop the fee on an existing order. Storefront checkout never
+        // sets this flag, so storefront behaviour is unaffected.
+        if ($behavior->hasPermission(CheckoutPermissions::SKIP_CART_PERSISTENCE)) {
+            $persisted = $original->getLineItems()->get(CodFeeLineItem::TYPE);
+            if ($persisted !== null) {
+                $toCalculate->getLineItems()->add($persisted);
+            }
+            return;
+        }
+
         // Check if plugin is active
-        $isActive = $this->systemConfigService->getBool(
-            'ActOrderSurcharges.config.codFeeActive',
-            $context->getSalesChannelId()
-        );
+        $isActive = $this->isConfigFlagEnabled('ActOrderSurcharges.config.codFeeActive', $context);
 
         if (!$isActive) {
             $this->removeCodFee($toCalculate);
@@ -59,6 +70,17 @@ class CodFeeProcessor implements CartProcessorInterface
 
         // Add or update COD fee
         $this->addCodFee($toCalculate, $context);
+    }
+
+    private function isConfigFlagEnabled(string $key, SalesChannelContext $context): bool
+    {
+        // Robust against config values persisted as strings ("false"/"0"), which a
+        // plain (bool) cast — and thus SystemConfigService::getBool — would read as
+        // true. filter_var normalises bool, "true"/"false", "1"/"0" and null.
+        return filter_var(
+            $this->systemConfigService->get($key, $context->getSalesChannelId()),
+            FILTER_VALIDATE_BOOLEAN
+        );
     }
 
     private function isCodPayment(SalesChannelContext $context): bool

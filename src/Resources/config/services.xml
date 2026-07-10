@@ -19,10 +19,5 @@
             <argument type="service" id="translator"/>
             <tag name="shopware.cart.processor" priority="-5100"/>
         </service>
-
-        <!-- Payment Method Changed Subscriber -->
-        <service id="Act\OrderSurcharges\Subscriber\PaymentMethodChangedSubscriber">
-            <tag name="kernel.event_subscriber"/>
-        </service>
     </services>
 </container>
