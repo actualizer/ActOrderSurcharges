@@ -54,6 +54,7 @@ bin/console cache:clear
 #### Cash on Delivery Fee
 - **Active**: Enable/disable COD fees
 - **COD Fee Amount**: Fee amount for cash on delivery payments (default: 5.95 €)
+- **Cash on delivery payment method**: Payment method that triggers the fee. If empty, the payment method is recognised by its name (see below)
 
 #### Tax Settings
 - **Default Tax Rate**: Tax rate used when no other rate can be determined (default: 19.0%)
@@ -69,7 +70,7 @@ bin/console cache:clear
 1. **Payment Detection**: Monitors payment method selection for COD variants
 2. **Dynamic Addition**: Fee added when COD payment method is selected
 3. **Automatic Removal**: Fee removed when different payment method is chosen
-4. **Language Support**: Detects various COD payment method names (Nachnahme, Cash on Delivery, COD)
+4. **Payment Method Selection**: Uses the configured payment method, or falls back to name detection (Nachnahme, Cash on Delivery, COD)
 
 ### Tax Handling
 - Inherits tax rate from existing cart products
@@ -86,10 +87,12 @@ bin/console cache:clear
 - Proper price definitions with tax calculations
 
 ### Payment Method Detection
-Detects COD payments by checking payment method names for:
+If a payment method is selected in the configuration, only that payment method triggers the fee.
+
+Otherwise COD payments are detected by checking payment method names for:
 - `nachnahme` (German)
 - `cash on delivery` (English)
-- `cod` (abbreviation)
+- `cod` (abbreviation, whole word only)
 
 ## Development
 

@@ -86,11 +86,23 @@ class CodFeeProcessor implements CartProcessorInterface
     private function isCodPayment(SalesChannelContext $context): bool
     {
         $paymentMethod = $context->getPaymentMethod();
+
+        // An explicitly selected payment method is authoritative.
+        $codPaymentMethodId = $this->systemConfigService->get(
+            'ActOrderSurcharges.config.codPaymentMethodId',
+            $context->getSalesChannelId()
+        );
+        if (is_string($codPaymentMethodId) && $codPaymentMethodId !== '') {
+            return $paymentMethod->getId() === $codPaymentMethodId;
+        }
+
+        // Fallback for shops without a selection: recognise COD by the payment name.
+        // "cod" must be a whole word so names merely containing it do not match.
         $paymentName = strtolower($paymentMethod->getName() ?? '');
 
         return strpos($paymentName, 'nachnahme') !== false ||
                strpos($paymentName, 'cash on delivery') !== false ||
-               strpos($paymentName, 'cod') !== false;
+               preg_match('/\bcod\b/', $paymentName) === 1;
     }
 
     private function hasRegularItems(Cart $cart): bool

@@ -44,14 +44,14 @@
             <helpText lang="de-DE">Der Betrag, der bei Wahl der Nachnahme-Zahlart hinzugefügt werden soll</helpText>
             <helpText lang="en-GB">The amount to be added when cash on delivery payment method is selected</helpText>
         </input-field>
-        <input-field type="text">
-            <name>codPaymentHandlerIdentifier</name>
-            <label lang="de-DE">Technischer Name der Nachnahme-Zahlart</label>
-            <label lang="en-GB">Technical name of cash on delivery payment method</label>
-            <defaultValue>payment_cashpayment</defaultValue>
-            <helpText lang="de-DE">Der technische Identifier der Nachnahme-Zahlart (z.B. "payment_cashpayment")</helpText>
-            <helpText lang="en-GB">The technical identifier of the cash on delivery payment method (e.g. "payment_cashpayment")</helpText>
-        </input-field>
+        <component name="sw-entity-single-select">
+            <name>codPaymentMethodId</name>
+            <entity>payment_method</entity>
+            <label lang="de-DE">Nachnahme-Zahlart</label>
+            <label lang="en-GB">Cash on delivery payment method</label>
+            <helpText lang="de-DE">Zahlart, bei der die Nachnahmegebühr berechnet wird. Leer lassen, um die Zahlart wie bisher am Namen zu erkennen (enthält „Nachnahme“, „cash on delivery“ oder das Wort „COD“).</helpText>
+            <helpText lang="en-GB">Payment method that triggers the cash on delivery fee. Leave empty to recognise it by its name as before (contains "Nachnahme", "cash on delivery" or the word "COD").</helpText>
+        </component>
     </card>
     <card>
         <title lang="de-DE">Steuereinstellungen</title>

@@ -6,7 +6,7 @@
                     "title": "So funktioniert's",
                     "item1": "Beide Zuschläge erscheinen als eigene Positionen im Warenkorb — Logistikpauschale und Nachnahmegebühr, jeweils einzeln abschaltbar.",
                     "item2": "Die Logistikpauschale verschwindet automatisch, sobald keine regulären Artikel mehr im Warenkorb liegen; die Nachnahmegebühr, sobald eine andere Zahlart gewählt wird.",
-                    "item3": "Die Nachnahme-Zahlart wird an ihrem <strong>Namen</strong> erkannt: Er muss „Nachnahme“, „cash on delivery“ oder „cod“ enthalten. Nach einer Umbenennung entfällt die Gebühr ohne Fehlermeldung.",
+                    "item3": "Die Nachnahme-Zahlart wird unter <strong>Nachnahme-Zahlart</strong> ausgewählt. Ist dort keine gewählt, wird sie an ihrem Namen erkannt: Er muss „Nachnahme“, „cash on delivery“ oder das Wort „COD“ enthalten.",
                     "item4": "Der Steuersatz richtet sich nach den Positionen im Warenkorb; <strong>Standard-Steuersatz</strong> greift nur, wenn sich daraus nichts ableiten lässt.",
                     "item5": "Die Beträge gelten je Verkaufskanal — die Auswahl steht oben auf dieser Seite."
                 },
