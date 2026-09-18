@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/platform/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
     <card>
+        <title>Information</title>
+        <title lang="de-DE">Information</title>
+
+        <component name="act-order-surcharges-info">
+            <name>pluginInfo</name>
+        </component>
+    </card>
+
+    <card>
         <title lang="de-DE">Logistikpauschale Einstellungen</title>
         <title lang="en-GB">Logistic Surcharge Settings</title>
         <input-field type="bool">

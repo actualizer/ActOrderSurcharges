@@ -1,0 +1,18 @@
+{
+    "act-order-surcharges": {
+        "settings": {
+            "info": {
+                "howTo": {
+                    "title": "How it works",
+                    "item1": "Both surcharges appear as their own line items in the cart — logistic surcharge and cash-on-delivery fee, each switchable on its own.",
+                    "item2": "The logistic surcharge disappears automatically once no regular products remain in the cart; the cash-on-delivery fee once a different payment method is chosen.",
+                    "item3": "The cash-on-delivery payment method is recognised by its <strong>name</strong>: it has to contain \"Nachnahme\", \"cash on delivery\" or \"cod\". After a rename the fee is dropped without any error message.",
+                    "item4": "The tax rate follows the items in the cart; <strong>Default tax rate</strong> only applies when nothing can be derived from them.",
+                    "item5": "The amounts apply per sales channel — the selector sits at the top of this page."
+                },
+                "description": "Automatically adds configurable surcharges to the cart: a logistic flat fee per order and a cash-on-delivery fee for the matching payment method, each with its own tax rate.",
+                "issues": "Problems or feature requests?"
+            }
+        }
+    }
+}

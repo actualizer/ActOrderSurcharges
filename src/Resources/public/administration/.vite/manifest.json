@@ -1,0 +1,11 @@
+{
+  "main.js": {
+    "file": "assets/act-order-surcharges-COxIHr6F.js",
+    "name": "act-order-surcharges",
+    "src": "main.js",
+    "isEntry": true,
+    "css": [
+      "assets/act-order-surcharges-Ccbw08aN.css"
+    ]
+  }
+}
