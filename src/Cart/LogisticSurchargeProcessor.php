@@ -11,6 +11,7 @@ use Shopware\Core\Checkout\Cart\LineItem\CartDataCollection;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\Struct\QuantityPriceDefinition;
+use Shopware\Core\Checkout\Cart\Tax\PercentageTaxRuleBuilder;
 use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRule;
 use Shopware\Core\Checkout\Cart\Tax\Struct\TaxRuleCollection;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -118,19 +119,28 @@ class LogisticSurchargeProcessor implements CartProcessorInterface
 
         $lineItem->setLabel($this->translator->trans(LogisticSurchargeLineItem::SNIPPET_KEY));
 
-        // Get tax rate
-        $taxRate = $this->getTaxRate($cart, $context);
-
         // Create price definition
         $definition = new QuantityPriceDefinition(
             $surchargeAmount,
-            new TaxRuleCollection([new TaxRule($taxRate)]),
+            $this->getTaxRules($cart, $context),
             1
         );
 
         // Calculate price
         $price = $this->calculator->calculate($definition, $context);
         $lineItem->setPrice($price);
+    }
+
+    private function getTaxRules(Cart $cart, SalesChannelContext $context): TaxRuleCollection
+    {
+        // Split by the share each tax rate has in the goods of the cart.
+        $goods = $cart->getLineItems()->filterType(LineItem::PRODUCT_LINE_ITEM_TYPE)->getPrices()->sum();
+        $rules = (new PercentageTaxRuleBuilder())->buildRules($goods);
+        if ($rules->count() > 0) {
+            return $rules;
+        }
+
+        return new TaxRuleCollection([new TaxRule($this->getTaxRate($cart, $context))]);
     }
 
     private function getTaxRate(Cart $cart, SalesChannelContext $context): float

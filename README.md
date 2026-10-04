@@ -73,7 +73,7 @@ bin/console cache:clear
 4. **Payment Method Selection**: Uses the configured payment method, or falls back to name detection (Nachnahme, Cash on Delivery, COD)
 
 ### Tax Handling
-- Inherits tax rate from existing cart products
+- Inherits the tax rate from the products in the cart; with mixed tax rates the surcharge is split by the share each rate has in the goods value (same as Shopware's automatic shipping tax)
 - Falls back to context tax rules
 - Uses configured default tax rate as final fallback
 - Proper tax calculation with Shopware's tax system
