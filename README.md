@@ -11,7 +11,6 @@ A Shopware 6 plugin that automatically adds configurable surcharges to the shopp
 - Payment method change detection and fee adjustment
 - Configurable surcharge amounts through admin panel
 - Multi-language support (German & English)
-- Compatible with Shopware 6.7
 
 ## Requirements
 
@@ -128,8 +127,6 @@ bin/console theme:compile
 
 ## Compatibility
 
-- **Shopware Version**: 6.7
-- **PHP Version**: 8.4+
 - **Payment Methods**: Compatible with all standard Shopware payment providers
 - **Tax Systems**: Works with all Shopware tax configurations
 
