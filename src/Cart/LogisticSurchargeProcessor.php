@@ -109,7 +109,7 @@ class LogisticSurchargeProcessor implements CartProcessorInterface
         // Check if logistic surcharge already exists
         $lineItem = $cart->getLineItems()->get(LogisticSurchargeLineItem::TYPE);
 
-        if (!$lineItem) {
+        if ($lineItem === null) {
             $lineItem = new LogisticSurchargeLineItem(
                 LogisticSurchargeLineItem::TYPE,
                 1

@@ -137,7 +137,7 @@ class CodFeeProcessor implements CartProcessorInterface
         // Check if COD fee already exists
         $lineItem = $cart->getLineItems()->get(CodFeeLineItem::TYPE);
 
-        if (!$lineItem) {
+        if ($lineItem === null) {
             $lineItem = new CodFeeLineItem(
                 CodFeeLineItem::TYPE,
                 1
