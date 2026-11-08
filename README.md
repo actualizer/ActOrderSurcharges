@@ -2,6 +2,11 @@
 
 A Shopware 6 plugin that automatically adds configurable surcharges to the shopping cart, including logistic fees and cash on delivery charges with dynamic payment method detection.
 
+## Requirements
+
+- Shopware `>=6.7 <6.8`, tested with 6.7.16.0
+- PHP 8.4 or higher
+
 ## Features
 
 - Automatic logistic surcharge for all orders
@@ -11,11 +16,6 @@ A Shopware 6 plugin that automatically adds configurable surcharges to the shopp
 - Payment method change detection and fee adjustment
 - Configurable surcharge amounts through admin panel
 - Multi-language support (German & English)
-
-## Requirements
-
-- Shopware `>=6.7 <6.8`, tested with 6.7.16.0
-- PHP 8.4 or higher
 
 ## Installation
 
