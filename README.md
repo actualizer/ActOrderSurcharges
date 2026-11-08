@@ -15,7 +15,7 @@ A Shopware 6 plugin that automatically adds configurable surcharges to the shopp
 
 ## Requirements
 
-- Shopware 6.7 or higher
+- Shopware `>=6.7 <6.8`, tested with 6.7.16.0
 - PHP 8.4 or higher
 
 ## Installation
