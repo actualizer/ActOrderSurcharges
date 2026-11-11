@@ -20,6 +20,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LogisticSurchargeProcessor implements CartProcessorInterface
 {
+    private const CALCULATION_PERCENTAGE = 'percentage';
+
     private SystemConfigService $systemConfigService;
     private QuantityPriceCalculator $calculator;
     private TranslatorInterface $translator;
@@ -95,11 +97,12 @@ class LogisticSurchargeProcessor implements CartProcessorInterface
 
     private function addLogisticSurcharge(Cart $cart, SalesChannelContext $context): void
     {
-        // Get surcharge amount from config
-        $surchargeAmount = (float) ($this->systemConfigService->get(
-            'ActOrderSurcharges.config.logisticSurchargeAmount',
-            $context->getSalesChannelId()
-        ) ?? 0.0);
+        $percentage = null;
+        if ($this->getConfigValue('logisticSurchargeCalculation', $context) === self::CALCULATION_PERCENTAGE) {
+            [$surchargeAmount, $percentage] = $this->calculatePercentageSurcharge($cart, $context);
+        } else {
+            $surchargeAmount = $this->getConfigFloat('logisticSurchargeAmount', $context);
+        }
 
         if ($surchargeAmount <= 0) {
             $this->removeLogisticSurcharge($cart);
@@ -117,7 +120,14 @@ class LogisticSurchargeProcessor implements CartProcessorInterface
             $cart->getLineItems()->add($lineItem);
         }
 
-        $lineItem->setLabel($this->translator->trans(LogisticSurchargeLineItem::SNIPPET_KEY));
+        if ($percentage !== null && $this->isConfigFlagEnabled('ActOrderSurcharges.config.logisticSurchargeShowPercentage', $context)) {
+            $lineItem->setLabel($this->translator->trans(
+                LogisticSurchargeLineItem::SNIPPET_KEY_PERCENTAGE,
+                ['%percentage%' => $this->formatPercentage($percentage, $context)]
+            ));
+        } else {
+            $lineItem->setLabel($this->translator->trans(LogisticSurchargeLineItem::SNIPPET_KEY));
+        }
 
         // Create price definition
         $definition = new QuantityPriceDefinition(
@@ -129,6 +139,62 @@ class LogisticSurchargeProcessor implements CartProcessorInterface
         // Calculate price
         $price = $this->calculator->calculate($definition, $context);
         $lineItem->setPrice($price);
+    }
+
+    /**
+     * The base is the goods value after promotions, in the price display of the context
+     * (gross or net), so the surcharge matches what the customer sees.
+     *
+     * @return array{float, ?float} amount, and the percentage when it was applied without a limit
+     */
+    private function calculatePercentageSurcharge(Cart $cart, SalesChannelContext $context): array
+    {
+        $percentage = $this->getConfigFloat('logisticSurchargePercentage', $context);
+        if ($percentage <= 0) {
+            return [0.0, null];
+        }
+
+        $base = 0.0;
+        foreach ($cart->getLineItems() as $item) {
+            if (\in_array($item->getType(), [LineItem::PRODUCT_LINE_ITEM_TYPE, LineItem::PROMOTION_LINE_ITEM_TYPE], true)) {
+                $base += $item->getPrice()?->getTotalPrice() ?? 0.0;
+            }
+        }
+
+        $amount = max(0.0, $base) * $percentage / 100;
+
+        $minAmount = $this->getConfigFloat('logisticSurchargeMinAmount', $context);
+        if ($minAmount > 0 && $amount < $minAmount) {
+            return [$minAmount, null];
+        }
+
+        $maxAmount = $this->getConfigFloat('logisticSurchargeMaxAmount', $context);
+        if ($maxAmount > 0 && $amount > $maxAmount) {
+            return [$maxAmount, null];
+        }
+
+        return [$amount, $percentage];
+    }
+
+    private function formatPercentage(float $percentage, SalesChannelContext $context): string
+    {
+        $formatter = new \NumberFormatter($context->getLanguageInfo()->localeCode, \NumberFormatter::DECIMAL);
+        $formatter->setAttribute(\NumberFormatter::MAX_FRACTION_DIGITS, 2);
+        $formatted = $formatter->format($percentage);
+
+        return \is_string($formatted) ? $formatted : (string) $percentage;
+    }
+
+    private function getConfigValue(string $field, SalesChannelContext $context): mixed
+    {
+        return $this->systemConfigService->get('ActOrderSurcharges.config.' . $field, $context->getSalesChannelId());
+    }
+
+    private function getConfigFloat(string $field, SalesChannelContext $context): float
+    {
+        $value = $this->getConfigValue($field, $context);
+
+        return is_numeric($value) ? (float) $value : 0.0;
     }
 
     private function getTaxRules(Cart $cart, SalesChannelContext $context): TaxRuleCollection

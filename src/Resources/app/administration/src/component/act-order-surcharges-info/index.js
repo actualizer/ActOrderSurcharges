@@ -3,7 +3,7 @@ import './act-order-surcharges-info.scss';
 
 const { Component } = Shopware;
 
-const HOW_TO_ITEM_COUNT = 5;
+const HOW_TO_ITEM_COUNT = 6;
 
 Component.register('act-order-surcharges-info', {
     template,

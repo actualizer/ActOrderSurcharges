@@ -12,19 +12,69 @@
     <card>
         <title lang="de-DE">Logistikpauschale Einstellungen</title>
         <title lang="en-GB">Logistic Surcharge Settings</title>
+        <name>logisticSurchargeSettings</name>
         <input-field type="bool">
             <name>logisticSurchargeActive</name>
             <label lang="de-DE">Aktiv</label>
             <label lang="en-GB">Active</label>
             <defaultValue>true</defaultValue>
         </input-field>
+        <input-field type="single-select">
+            <name>logisticSurchargeCalculation</name>
+            <label lang="de-DE">Berechnungsart</label>
+            <label lang="en-GB">Calculation</label>
+            <defaultValue>fixed</defaultValue>
+            <options>
+                <option>
+                    <id>fixed</id>
+                    <name lang="de-DE">Fester Betrag</name>
+                    <name lang="en-GB">Fixed amount</name>
+                </option>
+                <option>
+                    <id>percentage</id>
+                    <name lang="de-DE">Prozent vom Warenwert</name>
+                    <name lang="en-GB">Percentage of the goods value</name>
+                </option>
+            </options>
+            <helpText lang="de-DE">„Prozent vom Warenwert“ berechnet die Pauschale aus der Summe der Artikel abzüglich Rabatten und Gutscheinen, ohne Versandkosten.</helpText>
+            <helpText lang="en-GB">"Percentage of the goods value" calculates the surcharge from the total of the products minus discounts and vouchers, excluding shipping costs.</helpText>
+        </input-field>
         <input-field type="float">
             <name>logisticSurchargeAmount</name>
             <label lang="de-DE">Betrag der Logistikpauschale</label>
             <label lang="en-GB">Logistic surcharge amount</label>
             <defaultValue>4.95</defaultValue>
-            <helpText lang="de-DE">Der Betrag, der als Logistikpauschale hinzugefügt werden soll</helpText>
-            <helpText lang="en-GB">The amount to be added as logistic surcharge</helpText>
+            <helpText lang="de-DE">Der Betrag, der als Logistikpauschale hinzugefügt werden soll. Gilt nur bei Berechnungsart „Fester Betrag“.</helpText>
+            <helpText lang="en-GB">The amount to be added as logistic surcharge. Only applies to the calculation "Fixed amount".</helpText>
+        </input-field>
+        <input-field type="float">
+            <name>logisticSurchargePercentage</name>
+            <label lang="de-DE">Prozentsatz vom Warenwert</label>
+            <label lang="en-GB">Percentage of the goods value</label>
+            <helpText lang="de-DE">Zum Beispiel 5 für 5 %. Gilt nur bei Berechnungsart „Prozent vom Warenwert“.</helpText>
+            <helpText lang="en-GB">For example 5 for 5 %. Only applies to the calculation "Percentage of the goods value".</helpText>
+        </input-field>
+        <input-field type="float">
+            <name>logisticSurchargeMinAmount</name>
+            <label lang="de-DE">Mindestbetrag</label>
+            <label lang="en-GB">Minimum amount</label>
+            <helpText lang="de-DE">Optional. Die prozentuale Pauschale beträgt mindestens diesen Betrag. Leer oder 0 bedeutet keine Untergrenze.</helpText>
+            <helpText lang="en-GB">Optional. The percentage surcharge is at least this amount. Empty or 0 means no lower limit.</helpText>
+        </input-field>
+        <input-field type="float">
+            <name>logisticSurchargeMaxAmount</name>
+            <label lang="de-DE">Höchstbetrag</label>
+            <label lang="en-GB">Maximum amount</label>
+            <helpText lang="de-DE">Optional. Die prozentuale Pauschale beträgt höchstens diesen Betrag. Leer oder 0 bedeutet keine Obergrenze.</helpText>
+            <helpText lang="en-GB">Optional. The percentage surcharge is at most this amount. Empty or 0 means no upper limit.</helpText>
+        </input-field>
+        <input-field type="bool">
+            <name>logisticSurchargeShowPercentage</name>
+            <label lang="de-DE">Prozentsatz im Positionsnamen anzeigen</label>
+            <label lang="en-GB">Show percentage in the line item name</label>
+            <defaultValue>false</defaultValue>
+            <helpText lang="de-DE">Zeigt zum Beispiel „Logistikpauschale (5 %)“. Greift Mindest- oder Höchstbetrag, erscheint nur „Logistikpauschale“, weil der Prozentsatz dann nicht zum Betrag passt.</helpText>
+            <helpText lang="en-GB">Shows for example "Logistic surcharge (5%)". When the minimum or maximum amount applies, only "Logistic surcharge" is shown, as the percentage would not match the amount.</helpText>
         </input-field>
     </card>
     <card>

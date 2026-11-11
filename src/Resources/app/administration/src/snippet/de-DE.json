@@ -5,10 +5,11 @@
                 "howTo": {
                     "title": "So funktioniert's",
                     "item1": "Beide Zuschläge erscheinen als eigene Positionen im Warenkorb — Logistikpauschale und Nachnahmegebühr, jeweils einzeln abschaltbar.",
-                    "item2": "Die Logistikpauschale verschwindet automatisch, sobald keine regulären Artikel mehr im Warenkorb liegen; die Nachnahmegebühr, sobald eine andere Zahlart gewählt wird.",
-                    "item3": "Die Nachnahme-Zahlart wird unter <strong>Nachnahme-Zahlart</strong> ausgewählt. Ist dort keine gewählt, wird sie an ihrem Namen erkannt: Er muss „Nachnahme“, „cash on delivery“ oder das Wort „COD“ enthalten.",
-                    "item4": "Der Steuersatz richtet sich nach den Positionen im Warenkorb; <strong>Standard-Steuersatz</strong> greift nur, wenn sich daraus nichts ableiten lässt.",
-                    "item5": "Die Beträge gelten je Verkaufskanal — die Auswahl steht oben auf dieser Seite."
+                    "item2": "Die Logistikpauschale ist wahlweise ein fester Betrag oder ein Prozentsatz vom Warenwert (Artikel abzüglich Rabatten und Gutscheinen, ohne Versandkosten). <strong>Mindestbetrag</strong> und <strong>Höchstbetrag</strong> begrenzen den Prozentwert.",
+                    "item3": "Die Logistikpauschale verschwindet automatisch, sobald keine regulären Artikel mehr im Warenkorb liegen; die Nachnahmegebühr, sobald eine andere Zahlart gewählt wird.",
+                    "item4": "Die Nachnahme-Zahlart wird unter <strong>Nachnahme-Zahlart</strong> ausgewählt. Ist dort keine gewählt, wird sie an ihrem Namen erkannt: Er muss „Nachnahme“, „cash on delivery“ oder das Wort „COD“ enthalten.",
+                    "item5": "Der Steuersatz richtet sich nach den Positionen im Warenkorb; <strong>Standard-Steuersatz</strong> greift nur, wenn sich daraus nichts ableiten lässt.",
+                    "item6": "Die Beträge gelten je Verkaufskanal — die Auswahl steht oben auf dieser Seite."
                 },
                 "description": "Fügt dem Warenkorb automatisch konfigurierbare Zuschläge hinzu: eine Logistikpauschale pro Bestellung sowie eine Nachnahmegebühr bei Zahlart Nachnahme, jeweils mit eigenem Steuersatz.",
                 "issues": "Probleme oder Feature-Wünsche?"

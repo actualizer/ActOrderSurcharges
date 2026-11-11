@@ -1,0 +1,22 @@
+// Places the percentage, minimum and maximum field of the logistic surcharge in one row.
+// `.sw-system-config` is required: Meteor's scoped `.mt-card__content { display: flow-root }`
+// has the same specificity as a two-class selector and would win on source order.
+.sw-system-config .sw-system-config__card--logistic-surcharge-settings .mt-card__content {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 30px;
+
+    > * {
+        grid-column: 1 / -1;
+    }
+
+    > .sw-system-config--field-act-order-surcharges-config-logistic-surcharge-percentage,
+    > .sw-system-config--field-act-order-surcharges-config-logistic-surcharge-min-amount,
+    > .sw-system-config--field-act-order-surcharges-config-logistic-surcharge-max-amount {
+        grid-column: auto;
+    }
+}
+
+.sw-system-config .act-order-surcharges-config__field--hidden {
+    display: none;
+}

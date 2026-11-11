@@ -9,7 +9,7 @@ A Shopware 6 plugin that automatically adds configurable surcharges to the shopp
 
 ## Features
 
-- Automatic logistic surcharge for all orders
+- Automatic logistic surcharge for all orders, as a fixed amount or a percentage of the goods value with optional minimum and maximum
 - Cash on delivery (COD) fee based on payment method selection
 - Dynamic surcharge calculation with proper tax handling
 - Automatic cart cleanup when items are removed
@@ -48,7 +48,13 @@ bin/console cache:clear
 
 #### Logistic Surcharge
 - **Active**: Enable/disable the logistic surcharge
-- **Logistic Surcharge Amount**: Fixed amount added to all orders (default: 4.95 €)
+- **Calculation**: "Fixed amount" (default) or "Percentage of the goods value"
+- **Logistic Surcharge Amount**: Fixed amount added to all orders (default: 4.95 €), used with "Fixed amount"
+- **Percentage of the goods value**: e.g. `5` for 5 %, used with "Percentage of the goods value"
+- **Minimum amount** / **Maximum amount**: Optional limits for the percentage surcharge; empty or 0 means no limit
+- **Show percentage in the line item name**: Labels the line item e.g. "Logistic surcharge (5%)" (default: off)
+
+Only the fields of the selected calculation are shown; percentage, minimum and maximum share one row.
 
 #### Cash on Delivery Fee
 - **Active**: Enable/disable COD fees
@@ -64,6 +70,13 @@ bin/console cache:clear
 1. **Automatic Addition**: Added to cart when at least one regular product is present
 2. **Cart Cleanup**: Automatically removed when cart becomes empty
 3. **Tax Calculation**: Uses appropriate tax rate based on cart contents or configuration
+
+#### Percentage of the goods value
+- The base is the total of all products minus promotions (discounts and vouchers). Shipping costs, the cash on delivery fee and the surcharge itself are not part of it.
+- The base is taken in the price display of the customer: gross for gross customer groups, net for net customer groups. Fixed amount, minimum and maximum are interpreted the same way.
+- The result is raised to the minimum amount or capped at the maximum amount, then rounded like any other cart price.
+- With "Show percentage in the line item name" the percentage appears in the label, formatted for the customer's language ("5 %", "2,5 %" in German). When the minimum or maximum amount applies, the label shows the plain name, as the percentage would not match the amount.
+- Example with 5 %, minimum 3.00 € and maximum 25.00 €: 100 € goods → 5.00 €, 20 € goods → 3.00 €, 2,000 € goods → 25.00 €.
 
 ### Cash on Delivery Fee
 1. **Payment Detection**: Monitors payment method selection for COD variants

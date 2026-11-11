@@ -10,6 +10,7 @@ class LogisticSurchargeLineItem extends LineItem
 {
     public const TYPE = 'logistic-surcharge';
     public const SNIPPET_KEY = 'actualize.order.surcharges.logistic-surcharge';
+    public const SNIPPET_KEY_PERCENTAGE = 'actualize.order.surcharges.logistic-surcharge-percentage';
 
     public function __construct(string $id, int $quantity = 1)
     {

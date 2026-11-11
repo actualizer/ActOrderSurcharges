@@ -3,11 +3,11 @@
   "entryPoints": {
     "act-order-surcharges": {
       "css": [
-        "/bundles/actordersurcharges/administration/assets/act-order-surcharges-Ccbw08aN.css"
+        "/bundles/actordersurcharges/administration/assets/act-order-surcharges-BRNcbpkK.css"
       ],
       "dynamic": [],
       "js": [
-        "/bundles/actordersurcharges/administration/assets/act-order-surcharges-COxIHr6F.js"
+        "/bundles/actordersurcharges/administration/assets/act-order-surcharges-BB8yElmc.js"
       ],
       "legacy": false,
       "preload": []

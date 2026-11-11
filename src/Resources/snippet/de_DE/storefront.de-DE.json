@@ -4,6 +4,7 @@
             "surcharges": {
                 "cod-fee": "Nachnahmegebühr",
                 "logistic-surcharge": "Logistikpauschale",
+                "logistic-surcharge-percentage": "Logistikpauschale (%percentage%\u00a0%)",
                 "cod-fee-icon-label": "Rundes Icon mit Plus-Symbol für Nachnahmegebühr",
                 "logistic-surcharge-icon-label": "Versandkiste-Symbol für Logistikpauschale"
             }
