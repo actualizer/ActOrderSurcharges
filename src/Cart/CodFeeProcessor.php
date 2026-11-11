@@ -41,7 +41,8 @@ class CodFeeProcessor implements CartProcessorInterface
         // instead of recomputing it from the current config, which would retroactively
         // add, change or drop the fee on an existing order. Storefront checkout never
         // sets this flag, so storefront behaviour is unaffected.
-        if ($behavior->hasPermission(CheckoutPermissions::SKIP_CART_PERSISTENCE)) {
+        // CheckoutPermissions exists from Shopware 6.7.2.0 on; older releases have no such flag.
+        if (class_exists(CheckoutPermissions::class) && $behavior->hasPermission(CheckoutPermissions::SKIP_CART_PERSISTENCE)) {
             $persisted = $original->getLineItems()->get(CodFeeLineItem::TYPE);
             if ($persisted !== null) {
                 $toCalculate->getLineItems()->add($persisted);

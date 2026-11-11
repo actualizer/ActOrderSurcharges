@@ -1,3 +1,7 @@
+# 1.3.1
+
+- Fixed: on Shopware 6.7.0 and 6.7.1 every cart calculation failed, because a class the plugin relies on only exists from 6.7.2.0.
+
 # 1.3.0
 
 - The logistic surcharge can be calculated as a percentage of the goods value (products minus discounts and vouchers, excluding shipping costs), with an optional minimum and maximum amount.
